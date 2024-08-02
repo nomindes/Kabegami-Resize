@@ -90,6 +90,7 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
       children: [
         Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
             title: const Text('プレビュー'),
           ),
           body: Center(

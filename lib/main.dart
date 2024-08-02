@@ -16,19 +16,26 @@ class KabegamiResize extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.white,
-      brightness: Brightness.dark,
-    );
-
     return MaterialApp(
       title: '壁紙リサイズ',
       home: const Home(),
       theme: ThemeData(
-        colorScheme: colorScheme,
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.cyan,
+          brightness: Brightness.light,
+        ),
         fontFamily: 'NotoSansJP',
-        appBarTheme: AppBarTheme(backgroundColor: colorScheme.primaryContainer),
       ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.cyan,
+          brightness: Brightness.dark,
+        ),
+        fontFamily: 'NotoSansJP',
+      ),
+      themeMode: ThemeMode.system,
     );
   }
 }

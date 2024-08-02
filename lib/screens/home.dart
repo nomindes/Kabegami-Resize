@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kabegami_resize/screens/about.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kabegami_resize/utils/get_greeting.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'editor/image_edit.dart';
 
 class Home extends StatefulWidget {
@@ -48,6 +48,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: const Text('壁紙リサイズ'),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: Stack(
         children: [
@@ -57,16 +58,20 @@ class _HomeState extends State<Home> {
               children: [
                 Text(
                   '${getGreeting()}, User!',
-                  style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(height: 20),
                 ElevatedButton.icon(
                   onPressed: _isLoading ? null : getImageFromGallery,
-                  label: const Text('画像を読み込む'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
                   icon: const Icon(Symbols.image_search),
+                  label: const Text('画像を読み込む'),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 10),
                 ElevatedButton.icon(
                   onPressed: _isLoading ? null : () async {
                     setState(() {
@@ -82,17 +87,23 @@ class _HomeState extends State<Home> {
                       });
                     }
                   },
-                  label: const Text('このアプリについて'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                    foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+                  ),
                   icon: const Icon(Symbols.info),
+                  label: const Text('このアプリについて'),
                 )
               ],
             ),
           ),
           if (_isLoading)
             Container(
-              color: Colors.black.withOpacity(0.5),
-              child: const Center(
-                child: CircularProgressIndicator(),
+              color: Theme.of(context).colorScheme.scrim.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
         ],
