@@ -18,8 +18,13 @@ class _AboutMdState extends State<AboutMd> {
 
   @override
   Widget build(BuildContext context) {
-    return MarkdownWidget(
-      data: '''
+    return SafeArea(
+      top: false,
+      bottom: true,
+      left: false,
+      right: false,
+      child: MarkdownWidget(
+        data: '''
 # 壁紙リサイズとは
 画像の大きさが壁紙として合わない場合にリサイズできるアプリです。
 # このアプリを作ったきっかけ
@@ -38,13 +43,14 @@ class _AboutMdState extends State<AboutMd> {
 # ライセンス
 [ライセンス条件](license)
 ''',
-      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-      config: MarkdownConfig(configs: [
-        LinkConfig(
-          style: const TextStyle(fontSize: 20, color: Colors.blue),
-          onTap: (url) => handleLinkTap(context, url),
-        )
-      ]),
+        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+        config: MarkdownConfig(configs: [
+          LinkConfig(
+            style: const TextStyle(fontSize: 20, color: Colors.blue),
+            onTap: (url) => handleLinkTap(context, url),
+          )
+        ]),
+      ),
     );
   }
 }

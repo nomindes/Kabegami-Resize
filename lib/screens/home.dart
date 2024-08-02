@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kabegami_resize/screens/about.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kabegami_resize/utils/get_greeting.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'editor/image_edit.dart';
 
 class Home extends StatefulWidget {
@@ -63,7 +64,7 @@ class _HomeState extends State<Home> {
                 ElevatedButton.icon(
                   onPressed: _isLoading ? null : getImageFromGallery,
                   label: const Text('画像を読み込む'),
-                  icon: const Icon(Icons.image_search),
+                  icon: const Icon(Symbols.image_search),
                 ),
                 const SizedBox(height: 5),
                 ElevatedButton.icon(
@@ -82,7 +83,7 @@ class _HomeState extends State<Home> {
                     }
                   },
                   label: const Text('このアプリについて'),
-                  icon: const Icon(Icons.info),
+                  icon: const Icon(Symbols.info),
                 )
               ],
             ),

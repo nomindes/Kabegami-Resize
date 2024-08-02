@@ -46,6 +46,7 @@ dependencies:
   custom_image_crop: ^0.0.13
   flutter_colorpicker: ^1.1.0
   palette_generator: ^0.3.3+4
+  material_symbols_icons: ^4.2777.1
 
 dev_dependencies:
   flutter_test:

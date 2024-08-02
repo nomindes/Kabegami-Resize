@@ -4,6 +4,7 @@ import 'package:kabegami_resize/screens/editor/image_after_edit.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class ImageEdit extends StatefulWidget {
   final File imageFile;
@@ -81,7 +82,7 @@ class _ImageEditState extends State<ImageEdit> {
                 });
               }
             },
-            child: const Icon(Icons.crop),
+            child: const Icon(Symbols.crop),
           ),
           const SizedBox(height: 5),
           FloatingActionButton(
@@ -113,13 +114,13 @@ class _ImageEditState extends State<ImageEdit> {
                     );
                   });
             },
-            child: const Icon(Icons.color_lens),
+            child: const Icon(Symbols.color_lens),
           ),
           const SizedBox(height: 5),
           FloatingActionButton(
             heroTag: 'AutoColor',
             onPressed: _extractDominantColor,
-            child: const Icon(Icons.auto_awesome),
+            child: const Icon(Symbols.auto_fix),
           ),
           const SizedBox(height: 5),
           FloatingActionButton(
@@ -127,7 +128,18 @@ class _ImageEditState extends State<ImageEdit> {
             onPressed: () {
               _cropController.setData(CropImageData(x: 0, y: 0, scale: _cropController.cropImageData!.scale.toDouble()));
             },
-            child: const Icon(Icons.center_focus_strong),
+            child: const Icon(Symbols.recenter),
+          ),
+          const SizedBox(height: 5),
+          FloatingActionButton(
+            heroTag: 'Reset',
+            onPressed: () {
+              _cropController.setData(CropImageData(x: 0, y: 0, angle: 0, scale: 1,));
+              setState(() {
+                _backgroundColor = Colors.white;
+              });
+            },
+            child: const Icon(Symbols.reset_settings),
           ),
         ],
       ),
