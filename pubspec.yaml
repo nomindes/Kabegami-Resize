@@ -47,6 +47,7 @@ dependencies:
   flutter_colorpicker: ^1.1.0
   palette_generator: ^0.3.3+4
   material_symbols_icons: ^4.2777.1
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -63,7 +64,15 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/images/icon.png"
+
 flutter:
+  assets:
+    - 'assets/images/icon.png'
   fonts:
     - family: NotoSansJP
       fonts:
