@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kabegami_resize/widgets/about_md.dart';
+import 'package:iconsax/iconsax.dart';
 
 class About extends StatelessWidget {
   const About({super.key});
@@ -7,17 +8,24 @@ class About extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFE6E6E6),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        backgroundColor: const Color(0xFFE6E6E6),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Iconsax.arrow_left_2),
         ),
-        title: const Text('このアプリについて'),
+        title: const Text(
+          'About this App',
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              fontFamily: 'Lexend_Deca'),
+        ),
       ),
-      body: const AboutMd(),
+      body: AboutMd(),
     );
   }
 }

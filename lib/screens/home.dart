@@ -2,9 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:kabegami_resize/screens/about.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kabegami_resize/utils/get_greeting.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'editor/image_edit.dart';
+import 'package:iconsax/iconsax.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -24,7 +23,8 @@ class _HomeState extends State<Home> {
     });
 
     try {
-      final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+      final pickedFile =
+          await imagePicker.pickImage(source: ImageSource.gallery);
       if (!mounted) return;
       if (pickedFile != null) {
         image = XFile(pickedFile.path);
@@ -45,10 +45,16 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: const Color(0xFFBFBFBF),
       appBar: AppBar(
-        title: const Text('壁紙リサイズ'),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        title: const Text(
+          'Kabegami Resize',
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              fontFamily: 'Lexend_Deca'),
+        ),
+        backgroundColor: const Color(0xFFE6E6E6),
       ),
       body: Stack(
         children: [
@@ -56,43 +62,74 @@ class _HomeState extends State<Home> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  '${getGreeting()}, User!',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
                 ElevatedButton.icon(
                   onPressed: _isLoading ? null : getImageFromGallery,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                      backgroundColor: const Color(0xFFE6E6E6),
+                      foregroundColor: const Color(0xFF000000),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      elevation: 15,
+                      shadowColor: const Color.fromARGB(100, 0, 0, 0)),
+                  icon: const Icon(
+                    Iconsax.gallery_add,
+                    size: 20,
                   ),
-                  icon: const Icon(Symbols.image_search),
-                  label: const Text('画像を読み込む'),
+                  label: const Text(
+                    'Pick an image',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        fontFamily: 'Lexend_Deca'),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton.icon(
-                  onPressed: _isLoading ? null : () async {
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    try {
-                      await Navigator.push(context,
-                          MaterialPageRoute(
-                              builder: (context) => const About()));
-                    } finally {
-                      setState(() {
-                        _isLoading = false;
-                      });
-                    }
-                  },
+                  onPressed: _isLoading
+                      ? null
+                      : () async {
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          try {
+                            await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const About()));
+                          } finally {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
+                        },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                    foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+                      backgroundColor: const Color(0xFFE6E6E6),
+                      foregroundColor: const Color(0xFF000000),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      elevation: 15,
+                      shadowColor: const Color.fromARGB(100, 0, 0, 0)),
+                  icon: const Icon(
+                    Iconsax.message_question,
+                    size: 20,
                   ),
-                  icon: const Icon(Symbols.info),
-                  label: const Text('このアプリについて'),
+                  label: const Text(
+                    'About',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        fontFamily: 'Lexend_Deca'),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text(
+                  'Developer\nX: @nomin_coding',
+                  style: TextStyle(
+                      fontFamily: 'Lexend_Deca',
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16),
                 )
               ],
             ),

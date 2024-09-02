@@ -48,6 +48,7 @@ dependencies:
   palette_generator: ^0.3.3+4
   material_symbols_icons: ^4.2777.1
   flutter_launcher_icons: ^0.13.1
+  iconsax: ^0.0.8
 
 dev_dependencies:
   flutter_test:
@@ -74,26 +75,26 @@ flutter:
   assets:
     - 'assets/images/icon.png'
   fonts:
-    - family: NotoSansJP
-      fonts:
-        - asset: assets/fonts/NotoSansJP/NotoSansJP-Thin.ttf
-          weight: 100
-        - asset: assets/fonts/NotoSansJP/NotoSansJP-ExtraLight.ttf
-          weight: 200
-        - asset: assets/fonts/NotoSansJP/NotoSansJP-Light.ttf
-          weight: 300
-        - asset: assets/fonts/NotoSansJP/NotoSansJP-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/NotoSansJP/NotoSansJP-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/NotoSansJP/NotoSansJP-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/NotoSansJP/NotoSansJP-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/NotoSansJP/NotoSansJP-ExtraBold.ttf
-          weight: 800
-        - asset: assets/fonts/NotoSansJP/NotoSansJP-Black.ttf
-          weight: 900
+   - family: Lexend_Deca
+     fonts:
+       - asset: assets/fonts/Lexend_Deca/LexendDeca-Thin.ttf
+         weight: 100
+       - asset: assets/fonts/Lexend_Deca/LexendDeca-ExtraLight.ttf
+         weight: 200
+       - asset: assets/fonts/Lexend_Deca/LexendDeca-Light.ttf
+         weight: 300
+       - asset: assets/fonts/Lexend_Deca/LexendDeca-Regular.ttf
+         weight: 400
+       - asset: assets/fonts/Lexend_Deca/LexendDeca-Medium.ttf
+         weight: 500
+       - asset: assets/fonts/Lexend_Deca/LexendDeca-SemiBold.ttf
+         weight: 600
+       - asset: assets/fonts/Lexend_Deca/LexendDeca-Bold.ttf
+         weight: 700
+       - asset: assets/fonts/Lexend_Deca/LexendDeca-ExtraBold.ttf
+         weight: 800
+       - asset: assets/fonts/Lexend_Deca/LexendDeca-Black.ttf
+         weight: 900
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
