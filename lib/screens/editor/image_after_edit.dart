@@ -28,9 +28,8 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
     try {
       await ImageGallerySaver.saveImage(widget.croppedImageData);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('保存されました'))
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('保存されました')));
       }
     } finally {
       if (mounted) {
@@ -105,7 +104,9 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
                 icon: const Icon(Icons.download),
                 label: const Text('保存する'),
               ),
-              const SizedBox(height: 5,),
+              const SizedBox(
+                height: 5,
+              ),
               ElevatedButton.icon(
                 onPressed: _isLoading ? null : _setWallpaper,
                 icon: const Icon(Icons.wallpaper),
@@ -118,7 +119,9 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
           Container(
             color: Colors.black.withOpacity(0.5),
             child: const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
             ),
           ),
       ],

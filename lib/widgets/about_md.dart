@@ -10,7 +10,6 @@ class AboutMd extends StatefulWidget {
 }
 
 class _AboutMdState extends State<AboutMd> {
-
   @override
   void initState() {
     super.initState();
@@ -28,10 +27,10 @@ class _AboutMdState extends State<AboutMd> {
 # 壁紙リサイズとは
 画像の大きさが壁紙として合わない場合にリサイズできるアプリです。
 # このアプリを作ったきっかけ
-このアプリはXでの[アイデア募集](https://x.com/nomin_coding/status/1817913632145154144)から誕生しました。
+このアプリはXでの[アイデア募集](https://x.com/_rip_off1003/status/1817916252264051188)から誕生しました。
 # 開発者へのご連絡
 ## 通常のお問い合わせ
-- [Discord](https://discord.com/invite/C2nc3uHj)
+- [Discord](https://discord.com/invite/nRBU3DSQ)
 - [Twitter](https://x.com/nomin_coding)
 - [GitHub](https://github.com/nomindes)
 - [Instagram](https://www.instagram.com/sena.gadget_/)
@@ -48,7 +47,7 @@ class _AboutMdState extends State<AboutMd> {
           LinkConfig(
             style: const TextStyle(fontSize: 20, color: Colors.blue),
             onTap: (url) => handleLinkTap(context, url),
-          )
+          ),
         ]),
       ),
     );
