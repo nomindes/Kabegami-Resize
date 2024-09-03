@@ -1,7 +1,8 @@
 import 'dart:io';
-import 'dart:typed_data';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
 import 'package:path_provider/path_provider.dart';
@@ -88,29 +89,88 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
     return Stack(
       children: [
         Scaffold(
+          backgroundColor: const Color(0xFFBFBFBF),
           appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            title: const Text('プレビュー'),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Iconsax.arrow_left_2),
+            ),
+            backgroundColor: const Color(0xFFE6E6E6),
+            title: const Text(
+              'Preview',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  fontFamily: 'Lexend_Deca'),
+            ),
           ),
-          body: Center(
-            child: Image.memory(widget.croppedImageData),
-          ),
-          floatingActionButton: Column(
-            verticalDirection: VerticalDirection.up,
-            mainAxisSize: MainAxisSize.min,
+          body: Column(
             children: [
-              ElevatedButton.icon(
-                onPressed: _isLoading ? null : _saveImage,
-                icon: const Icon(Icons.download),
-                label: const Text('保存する'),
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DottedBorder(
+                        color: Colors.white,
+                        strokeWidth: 5,
+                        dashPattern: const [10, 5],
+                        child: Image.memory(widget.croppedImageData)),
+                  ),
+                ),
               ),
-              const SizedBox(
-                height: 5,
-              ),
-              ElevatedButton.icon(
-                onPressed: _isLoading ? null : _setWallpaper,
-                icon: const Icon(Icons.wallpaper),
-                label: const Text('壁紙にする'),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE6E6E6),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 15,
+                        shadowColor: const Color.fromARGB(100, 0, 0, 0),
+                      ),
+                      onPressed: _isLoading ? null : _setWallpaper,
+                      child: const Text(
+                        'Set as Wallpaper',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            fontFamily: 'Lexend_Deca',
+                            color: Colors.black),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFE6E6E6),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 15,
+                          shadowColor: const Color.fromARGB(100, 0, 0, 0),
+                        ),
+                        onPressed: _isLoading ? null : _saveImage,
+                        child: const Text(
+                          'Save wallpaper',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              fontFamily: 'Lexend_Deca',
+                              color: Colors.black),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ],
           ),

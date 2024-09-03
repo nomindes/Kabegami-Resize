@@ -18,27 +18,16 @@ class _HomeState extends State<Home> {
   bool _isLoading = false;
 
   Future getImageFromGallery() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final pickedFile =
-          await imagePicker.pickImage(source: ImageSource.gallery);
-      if (!mounted) return;
-      if (pickedFile != null) {
-        image = XFile(pickedFile.path);
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ImageEdit(imageFile: File(image!.path)),
-          ),
-        );
-      }
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+    final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (!mounted) return;
+    if (pickedFile != null) {
+      image = XFile(pickedFile.path);
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ImageEdit(imageFile: File(image!.path)),
+        ),
+      );
     }
   }
 

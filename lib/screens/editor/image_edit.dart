@@ -81,6 +81,8 @@ class _ImageEditState extends State<ImageEdit> {
                 child: SizedBox(
                   height: 100,
                   child: Card(
+                    elevation: 15,
+                    shadowColor: const Color.fromARGB(100, 0, 0, 0),
                     color: const Color(0xFFE6E6E6),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
