@@ -25,7 +25,7 @@ class About extends StatelessWidget {
               fontFamily: 'Lexend_Deca'),
         ),
       ),
-      body: AboutMd(),
+      body: const AboutMd(),
     );
   }
 }
