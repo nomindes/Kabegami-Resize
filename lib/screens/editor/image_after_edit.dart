@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,30 +19,112 @@ class ImageAfterEdit extends StatefulWidget {
 
 class _ImageAfterEditState extends State<ImageAfterEdit> {
   bool _isLoading = false;
+  bool _preventLockScreenEnlargement = false;
 
-  Future<void> _saveImage() async {
-    if (_isLoading) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      await ImageGallerySaver.saveImage(widget.croppedImageData);
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('保存されました')));
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+  Future<void> _showWallpaperOptions() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('壁紙設定オプション'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: const Text('ホーム画面に設定'),
+                    onTap: () => _setWallpaper(WallpaperManager.HOME_SCREEN),
+                  ),
+                  ListTile(
+                    title: const Text('ロック画面に設定'),
+                    onTap: () => _setWallpaper(WallpaperManager.LOCK_SCREEN),
+                  ),
+                  const Text('ロック画面で壁紙が拡大される端末があります'),
+                  CheckboxListTile(
+                    title: const Text('ロック画面拡大防止'),
+                    value: _preventLockScreenEnlargement,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _preventLockScreenEnlargement = value ?? false;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
-  Future<void> _setWallpaper() async {
+  Future<void> _showSaveOptions() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('壁紙保存オプション'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: const Text('そのまま保存'),
+                    onTap: () => _saveImage(false),
+                  ),
+                  const Text('ロック画面で壁紙が拡大される端末があります'),
+                  CheckboxListTile(
+                    title: const Text('ロック画面拡大防止'),
+                    value: _preventLockScreenEnlargement,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _preventLockScreenEnlargement = value ?? false;
+                      });
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('拡大防止版を保存'),
+                    onTap: () => _saveImage(true),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<Uint8List> _addPaddingToImage(Uint8List imageData) async {
+    final codec = await ui.instantiateImageCodec(imageData);
+    final frame = await codec.getNextFrame();
+    final image = frame.image;
+
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+
+    final srcSize = Size(image.width.toDouble(), image.height.toDouble());
+    final dstSize = Size(srcSize.width * 1.1, srcSize.height * 1.1);
+
+    final srcRect = Rect.fromLTWH(0, 0, srcSize.width, srcSize.height);
+    final dstRect = Rect.fromLTWH(
+      (dstSize.width - srcSize.width) / 2,
+      (dstSize.height - srcSize.height) / 2,
+      srcSize.width,
+      srcSize.height,
+    );
+
+    canvas.drawImageRect(image, srcRect, dstRect, Paint());
+
+    final picture = recorder.endRecording();
+    final img = await picture.toImage(dstSize.width.round(), dstSize.height.round());
+    final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    return byteData!.buffer.asUint8List();
+  }
+
+  Future<void> _setWallpaper(int wallpaperType) async {
     if (_isLoading) return;
 
     setState(() {
@@ -52,12 +135,17 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
       final directory = await getTemporaryDirectory();
       final imagePath = '${directory.path}/wallpaper.png';
 
+      Uint8List imageData = widget.croppedImageData;
+      if (_preventLockScreenEnlargement && wallpaperType == WallpaperManager.LOCK_SCREEN) {
+        imageData = await _addPaddingToImage(widget.croppedImageData);
+      }
+
       File imageFile = File(imagePath);
-      await imageFile.writeAsBytes(widget.croppedImageData);
+      await imageFile.writeAsBytes(imageData);
 
       bool result = await WallpaperManager.setWallpaperFromFile(
         imagePath,
-        WallpaperManager.HOME_SCREEN,
+        wallpaperType,
       );
 
       if (mounted) {
@@ -66,9 +154,44 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
             content: Text(result ? '壁紙を設定しました' : '壁紙の設定に失敗しました'),
           ),
         );
+        Navigator.of(context).pop();
       }
 
       await imageFile.delete();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('エラーが発生しました: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _saveImage(bool addPadding) async {
+    if (_isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      Uint8List imageData = widget.croppedImageData;
+      if (addPadding) {
+        imageData = await _addPaddingToImage(widget.croppedImageData);
+      }
+
+      await ImageGallerySaver.saveImage(imageData);
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('保存されました')));
+        Navigator.of(context).pop();
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -134,7 +257,7 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
                         elevation: 15,
                         shadowColor: const Color.fromARGB(100, 0, 0, 0),
                       ),
-                      onPressed: _isLoading ? null : _setWallpaper,
+                      onPressed: _isLoading ? null : _showWallpaperOptions,
                       child: const Text(
                         'Set as Wallpaper',
                         style: TextStyle(
@@ -158,7 +281,7 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
                           elevation: 15,
                           shadowColor: const Color.fromARGB(100, 0, 0, 0),
                         ),
-                        onPressed: _isLoading ? null : _saveImage,
+                        onPressed: _isLoading ? null : _showSaveOptions,
                         child: const Text(
                           'Save wallpaper',
                           style: TextStyle(
