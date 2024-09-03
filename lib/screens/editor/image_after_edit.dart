@@ -24,34 +24,71 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
   Future<void> _showWallpaperOptions() async {
     return showDialog(
       context: context,
+      barrierDismissible: !_isLoading,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setState) {
-            return AlertDialog(
-              title: const Text('壁紙設定オプション'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    title: const Text('ホーム画面に設定'),
-                    onTap: () => _setWallpaper(WallpaperManager.HOME_SCREEN),
+            return Stack(
+              children: [
+                AlertDialog(
+                  backgroundColor: const Color(0xFFE6E6E6),
+                  title: const Text(
+                    '壁紙設定オプション',
+                    style: TextStyle(fontFamily: 'Lexend_Deca'),
                   ),
-                  ListTile(
-                    title: const Text('ロック画面に設定'),
-                    onTap: () => _setWallpaper(WallpaperManager.LOCK_SCREEN),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                          title: const Text(
+                            'ホーム画面に設定',
+                            style: TextStyle(fontFamily: 'Lexend_Deca'),
+                          ),
+                          onTap: () async {
+                            Navigator.pop(context);
+                            await _setWallpaper(WallpaperManager.HOME_SCREEN);
+                          }),
+                      ListTile(
+                          title: const Text(
+                            'ロック画面に設定',
+                            style: TextStyle(fontFamily: 'Lexend_Deca'),
+                          ),
+                          onTap: () async {
+                            Navigator.pop(context);
+                            await _setWallpaper(WallpaperManager.LOCK_SCREEN);
+                          }),
+                      CheckboxListTile(
+                        title: const Text(
+                          'ロック画面拡大防止',
+                          style: TextStyle(fontFamily: 'Lexend_Deca'),
+                        ),
+                        value: _preventLockScreenEnlargement,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _preventLockScreenEnlargement = value ?? false;
+                          });
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        '※ロック画面で壁紙が拡大される端末があります',
+                        style: TextStyle(fontFamily: 'Lexend_Deca'),
+                      ),
+                    ],
                   ),
-                  const Text('ロック画面で壁紙が拡大される端末があります'),
-                  CheckboxListTile(
-                    title: const Text('ロック画面拡大防止'),
-                    value: _preventLockScreenEnlargement,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _preventLockScreenEnlargement = value ?? false;
-                      });
-                    },
+                ),
+                if (_isLoading)
+                  Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ],
-              ),
+              ],
             );
           },
         );
@@ -62,34 +99,61 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
   Future<void> _showSaveOptions() async {
     return showDialog(
       context: context,
+      barrierDismissible: !_isLoading,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setState) {
-            return AlertDialog(
-              title: const Text('壁紙保存オプション'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    title: const Text('そのまま保存'),
-                    onTap: () => _saveImage(false),
+            return Stack(
+              children: [
+                AlertDialog(
+                  backgroundColor: const Color(0xFFE6E6E6),
+                  title: const Text(
+                    '壁紙保存オプション',
+                    style: TextStyle(fontFamily: 'Lexend_Deca'),
                   ),
-                  const Text('ロック画面で壁紙が拡大される端末があります'),
-                  CheckboxListTile(
-                    title: const Text('ロック画面拡大防止'),
-                    value: _preventLockScreenEnlargement,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _preventLockScreenEnlargement = value ?? false;
-                      });
-                    },
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        title: const Text(
+                          'そのまま保存',
+                          style: TextStyle(fontFamily: 'Lexend_Deca'),
+                        ),
+                        onTap: () async {
+                          Navigator.pop(context);
+                          await _saveImage(false);
+                        },
+                      ),
+                      ListTile(
+                        title: const Text(
+                          '拡大防止版を保存',
+                          style: TextStyle(fontFamily: 'Lexend_Deca'),
+                        ),
+                        onTap: () async {
+                          Navigator.pop(context);
+                          await _saveImage(true);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        '※ロック画面で壁紙が拡大される端末があります',
+                        style: TextStyle(fontFamily: 'Lexend_Deca'),
+                      ),
+                    ],
                   ),
-                  ListTile(
-                    title: const Text('拡大防止版を保存'),
-                    onTap: () => _saveImage(true),
+                ),
+                if (_isLoading)
+                  Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ],
-              ),
+              ],
             );
           },
         );
@@ -119,14 +183,13 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
     canvas.drawImageRect(image, srcRect, dstRect, Paint());
 
     final picture = recorder.endRecording();
-    final img = await picture.toImage(dstSize.width.round(), dstSize.height.round());
+    final img =
+        await picture.toImage(dstSize.width.round(), dstSize.height.round());
     final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
     return byteData!.buffer.asUint8List();
   }
 
   Future<void> _setWallpaper(int wallpaperType) async {
-    if (_isLoading) return;
-
     setState(() {
       _isLoading = true;
     });
@@ -136,7 +199,8 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
       final imagePath = '${directory.path}/wallpaper.png';
 
       Uint8List imageData = widget.croppedImageData;
-      if (_preventLockScreenEnlargement && wallpaperType == WallpaperManager.LOCK_SCREEN) {
+      if (_preventLockScreenEnlargement &&
+          wallpaperType == WallpaperManager.LOCK_SCREEN) {
         imageData = await _addPaddingToImage(widget.croppedImageData);
       }
 
@@ -154,7 +218,6 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
             content: Text(result ? '壁紙を設定しました' : '壁紙の設定に失敗しました'),
           ),
         );
-        Navigator.of(context).pop();
       }
 
       await imageFile.delete();
@@ -174,8 +237,6 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
   }
 
   Future<void> _saveImage(bool addPadding) async {
-    if (_isLoading) return;
-
     setState(() {
       _isLoading = true;
     });
@@ -190,7 +251,6 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
       if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('保存されました')));
-        Navigator.of(context).pop();
       }
     } catch (e) {
       if (mounted) {
@@ -209,70 +269,48 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: const Color(0xFFBFBFBF),
-          appBar: AppBar(
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Iconsax.arrow_left_2),
+    return IgnorePointer(
+      ignoring: _isLoading,
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: const Color(0xFFBFBFBF),
+            appBar: AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Iconsax.arrow_left_2),
+              ),
+              backgroundColor: const Color(0xFFE6E6E6),
+              title: const Text(
+                'Preview',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    fontFamily: 'Lexend_Deca'),
+              ),
             ),
-            backgroundColor: const Color(0xFFE6E6E6),
-            title: const Text(
-              'Preview',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  fontFamily: 'Lexend_Deca'),
-            ),
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DottedBorder(
-                        color: Colors.white,
-                        strokeWidth: 5,
-                        dashPattern: const [10, 5],
-                        child: Image.memory(widget.croppedImageData)),
+            body: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DottedBorder(
+                          color: Colors.white,
+                          strokeWidth: 5,
+                          dashPattern: const [10, 5],
+                          child: Image.memory(widget.croppedImageData)),
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE6E6E6),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        elevation: 15,
-                        shadowColor: const Color.fromARGB(100, 0, 0, 0),
-                      ),
-                      onPressed: _isLoading ? null : _showWallpaperOptions,
-                      child: const Text(
-                        'Set as Wallpaper',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            fontFamily: 'Lexend_Deca',
-                            color: Colors.black),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE6E6E6),
                           shape: RoundedRectangleBorder(
@@ -281,9 +319,9 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
                           elevation: 15,
                           shadowColor: const Color.fromARGB(100, 0, 0, 0),
                         ),
-                        onPressed: _isLoading ? null : _showSaveOptions,
+                        onPressed: _showWallpaperOptions,
                         child: const Text(
-                          'Save wallpaper',
+                          'Set as Wallpaper',
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
@@ -291,23 +329,48 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
                               color: Colors.black),
                         ),
                       ),
-                    )
-                  ],
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFE6E6E6),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            elevation: 15,
+                            shadowColor: const Color.fromARGB(100, 0, 0, 0),
+                          ),
+                          onPressed: _showSaveOptions,
+                          child: const Text(
+                            'Save wallpaper',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                fontFamily: 'Lexend_Deca',
+                                color: Colors.black),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        if (_isLoading)
-          Container(
-            color: Colors.black.withOpacity(0.5),
-            child: const Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-              ),
+              ],
             ),
           ),
-      ],
+          if (_isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

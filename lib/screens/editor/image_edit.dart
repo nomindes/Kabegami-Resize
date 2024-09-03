@@ -138,7 +138,13 @@ class _ImageEditState extends State<ImageEdit> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            title: const Text('Pick a color!'),
+                                            backgroundColor:
+                                                const Color(0xFFE6E6E6),
+                                            title: const Text(
+                                              'Pick a color!',
+                                              style: TextStyle(
+                                                  fontFamily: 'Lexend_Deca'),
+                                            ),
                                             content: SingleChildScrollView(
                                               child: ColorPicker(
                                                 pickerColor: _backgroundColor,
@@ -151,7 +157,23 @@ class _ImageEditState extends State<ImageEdit> {
                                             ),
                                             actions: <Widget>[
                                               ElevatedButton(
-                                                child: const Text('DONE'),
+                                                style: ElevatedButton.styleFrom(
+                                                    elevation: 15,
+                                                    shadowColor:
+                                                        const Color.fromARGB(
+                                                            100, 0, 0, 0),
+                                                    backgroundColor:
+                                                        const Color.fromARGB(
+                                                            255,
+                                                            225,
+                                                            225,
+                                                            225)),
+                                                child: const Text(
+                                                  'DONE',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Lexend_Deca',
+                                                      color: Colors.black),
+                                                ),
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
                                                 },
