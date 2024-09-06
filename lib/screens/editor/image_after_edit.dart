@@ -330,7 +330,7 @@ class _ImageAfterEditState extends State<ImageAfterEdit> {
                         ),
                       ),
                       const SizedBox(
-                        width: 10,
+                        width: 5,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
