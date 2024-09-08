@@ -27,7 +27,7 @@ class _AboutMdState extends State<AboutMd> {
 # 壁紙リサイズとは
 画像の大きさが壁紙として合わない場合にリサイズできるアプリです。
 # このアプリを作ったきっかけ
-このアプリはXでの[アイデア募集](https://x.com/_rip_off1003/status/1817916252264051188)から誕生しました。
+このアプリはXでの[アイデア提供](https://x.com/_rip_off1003/status/1817916252264051188)から誕生しました。
 # 開発者へのご連絡
 ## 通常のお問い合わせ
 - [Discord](https://discord.com/invite/nRBU3DSQ)
