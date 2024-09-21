@@ -1,4 +1,4 @@
-package jp.nomin.kabegami_resize
+package jp.nomin.kabegami-resize
 
 import io.flutter.embedding.android.FlutterActivity
 
