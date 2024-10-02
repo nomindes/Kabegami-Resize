@@ -2,6 +2,8 @@
 
 壁紙リサイズは、スマートフォンの壁紙として使用する画像を簡単に編集・調整できるFlutterアプリケーションです。
 
+https://nomin.jp/kabegami-resize/
+
 ## 主な機能
 
 - 画像のクロップ：デバイスの画面アスペクト比に合わせて画像をクロップ
@@ -12,7 +14,7 @@
 
 ## インストール
 
-WIPのため非公開。
+[Latest release](https://github.com/nomindes/Kabegami-Resize/releases/latest)
 
 ## コントリビューション
 
